@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,5 +40,27 @@ public class EmployeeResource {
 		return new ResponseEntity<Employee>(employee, HttpStatus.OK);
 	}
 	
+	@RequestMapping(method=RequestMethod.POST,consumes={"application/xml","application/json"},produces="text/plain")
+	public @ResponseBody ResponseEntity<String> addEmployee(@RequestBody Employee e) {
+		int nextId = list.lastKey() + 1;
+		e.setEmpId(nextId);
+		list.put(nextId, e);
+		return new ResponseEntity<String>("Employee with id " + nextId + " added successfully", HttpStatus.CREATED);
+	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.PUT, consumes={"application/xml","application/json"}, produces="text/plain")
+	public @ResponseBody ResponseEntity<String> updateEmployee(@RequestBody Employee e, @PathVariable("id") int id) {
+		Employee emp = list.get(id);
+		emp.setName(e.getName());
+		emp.setDesignation(e.getDesignation());
+		
+		return new ResponseEntity<String>("Employee with id " + id + " updated successfully", HttpStatus.OK);
+	}
 
+	@RequestMapping(value="/{id}",method=RequestMethod.DELETE,produces="text/plain")
+	public @ResponseBody ResponseEntity<String> deleteEmployee(@PathVariable("id")int id)
+	{
+		list.remove(id);
+		return new ResponseEntity<String>("Employee with id "+id+" removed successfully", HttpStatus.OK);
+	}
 }

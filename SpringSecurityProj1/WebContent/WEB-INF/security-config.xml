@@ -5,16 +5,21 @@
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
 <security:http  auto-config="true">
-<security:intercept-url pattern="/*.jsp" access="ROLE_USER"/>
+<security:intercept-url pattern="/*.jsp" access="ROLE_USER" requires-channel="https"/>
 <!-- <security:http-basic/>  -->
-<security:form-login/>
+<!-- <security:form-login/> -->
+<security:form-login login-page="/login.html" authentication-failure-url="/error.html"/>
+<security:port-mappings>
+	<security:port-mapping  http="8080" https="8443"/>
+</security:port-mappings>
 </security:http>
 
 <security:authentication-manager>
 <security:authentication-provider>
+<security:password-encoder hash="md5"></security:password-encoder>
 <security:user-service>
-<security:user name="user1" password="pass1" authorities="ROLE_USER"/>
-<security:user name="user2" password="pass2" authorities="ROLE_USER"/>
+<security:user name="user1" password="a722c63db8ec8625af6cf71cb8c2d939" authorities="ROLE_USER"/>
+<security:user name="user2" password="c1572d05424d0ecb2a65ec6a82aeacbf" authorities="ROLE_USER"/>
 </security:user-service>
 </security:authentication-provider>
 </security:authentication-manager>
